@@ -50,26 +50,27 @@ class Main{
                             console.log('Lamp Found:', child.name);
                     
                             const positions = child.geometry.attributes.position;
-                            // let xSum = 0, ySum = 0, zSum = 0;
-                            let x=0, y=0, z=0;
+                            let xSum = 0, ySum = 0, zSum = 0;
+                            // let x=0, y=0, z=0;
                     
                             for (let i = 0; i < positions.count; i++) {
-                                x = positions.getX(i);
-                                y = positions.getY(i);
-                                z = positions.getZ(i);
-                                // xSum += positions.getX(i);
-                                // ySum += positions.getY(i);
-                                // zSum += positions.getZ(i);
+                                // x = positions.getX(i);
+                                // y = positions.getY(i);
+                                // z = positions.getZ(i);
+                                xSum += positions.getX(i);
+                                ySum += positions.getY(i);
+                                zSum += positions.getZ(i);
                             }
                     
-                            // const x = xSum / positions.count;
-                            // const y = ySum / positions.count;
-                            // const z = zSum / positions.count;
+                            const x = xSum / positions.count;
+                            const y = ySum / positions.count;
+                            const z = zSum / positions.count;
                     
                             console.log(`Lamp Centroid: (${x}, ${y}, ${z})`);
                     
                             //Add a point light to the lamp's centroid position
                             const pointLight = new THREE.PointLight(0xffffff, 1, 100000);
+                            const helperpl = new THREE.PointLightHelper(pointLight);
                             // const directLight = new THREE.DirectionalLight(0xffffff);
                             
                             
@@ -82,7 +83,7 @@ class Main{
 
                             
                             Main.scene.add(pointLight);
-                            // Main.scene.add(directLight);
+                            Main.scene.add(helperpl);
                             //Main.scene.add(ambientLight1);
                     
                             // Log the light position
