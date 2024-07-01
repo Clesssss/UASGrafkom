@@ -211,7 +211,7 @@ class Main{
 
                             //const ambientLight1 = new THREE.AmbientLight(0xffffff,0.1);
                             pointLight.position.set(x-1, y-1, z+1);
-                            //pointLight.castShadow = true;
+                            pointLight.castShadow = true;
 
                             // directLight.position.set(x-1, y-1, z+1);
 
