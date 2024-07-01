@@ -33,6 +33,9 @@ class FreeCamera {
         this.defaultFov = this.camera.fov;
         this.zoomSpeed = 2;
 
+        this.defaultFov = this.camera.fov;
+        this.zoomSpeed = 2;
+
         document.addEventListener("keydown", (e) => this.onKeyDown(e), false);
         document.addEventListener("keyup", (e) => this.onKeyUp(e), false);
         document.addEventListener("mousemove", (e) => this.onMouseMove(e), false);
@@ -187,17 +190,11 @@ class Main{
                     
                             const positions = child.geometry.attributes.position;
                             let xSum = 0, ySum = 0, zSum = 0;
-                            // let x=0, y=0, z=0;
-                    
                             for (let i = 0; i < positions.count; i++) {
-                                // x = positions.getX(i);
-                                // y = positions.getY(i);
-                                // z = positions.getZ(i);
                                 xSum += positions.getX(i);
                                 ySum += positions.getY(i);
                                 zSum += positions.getZ(i);
                             }
-                    
                             const x = xSum / positions.count;
                             const y = ySum / positions.count;
                             const z = zSum / positions.count;
@@ -207,7 +204,7 @@ class Main{
                             //Add a point light to the lamp's centroid position
                             const pointLight = new THREE.PointLight(0xffffff, 1, 100000);
                             const helperpl = new THREE.PointLightHelper(pointLight);
-                            // const directLight = new THREE.DirectionalLight(0xffffff);
+                            //const directLight = new THREE.DirectionalLight(0xffffff);
                             
                             
 
