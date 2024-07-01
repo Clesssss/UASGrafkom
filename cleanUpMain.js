@@ -30,6 +30,9 @@ class FreeCamera {
         this.yawQuaternion = new THREE.Quaternion();
         this.rollQuaternion = new THREE.Quaternion();
 
+        this.defaultFov = this.camera.fov;
+        this.zoomSpeed = 2;
+
         document.addEventListener("keydown", (e) => this.onKeyDown(e), false);
         document.addEventListener("keyup", (e) => this.onKeyUp(e), false);
         document.addEventListener("mousemove", (e) => this.onMouseMove(e), false);
@@ -37,6 +40,7 @@ class FreeCamera {
         document.addEventListener("mouseup", (e) => this.onMouseUp(e), false);
         document.addEventListener('pointerlockchange', this.onPointerLockChange.bind(this), false);
         document.addEventListener('pointerlockerror', this.onPointerLockError.bind(this), false);
+        document.addEventListener('wheel', (e) => this.onMouseWheel(e), false);
     }
 
     onKeyDown(event) {
@@ -65,14 +69,6 @@ class FreeCamera {
         }
     }
 
-    onMouseDown(event) {
-        this.requestPointerLock();
-    }
-
-    requestPointerLock() {
-        document.body.requestPointerLock();
-    }
-
     onPointerLockChange() {
         if (document.pointerLockElement === document.body) {
             console.log('Pointer locked');
@@ -85,10 +81,16 @@ class FreeCamera {
         console.error('Pointer lock error');
     }
 
+    onMouseWheel(event) {
+        this.camera.fov -= event.deltaY * 0.05;
+        this.camera.fov = Math.max(10, Math.min(75, this.camera.fov));
+        this.camera.updateProjectionMatrix();
+    }
+
     onMouseMove(event) {
         if (document.pointerLockElement === document.body) {
-            var pitchDelta = -event.movementY * 0.002; // pitch (up/down) control
-            const yawDelta = -event.movementX * 0.002; // yaw (left/right) control
+            var pitchDelta = -event.movementY * 0.002; //pitch (up/down)
+            const yawDelta = -event.movementX * 0.002; //yaw (left/right)
 
             if (this.pitch+pitchDelta < this.minPitch){
                 pitchDelta = this.minPitch - this.pitch
@@ -97,11 +99,11 @@ class FreeCamera {
             }
             this.pitch += pitchDelta;
 
-            // Update pitch and yaw quaternions
+            //Update pitch and yaw quaternion
             this.pitchQuaternion.setFromAxisAngle(new THREE.Vector3(1, 0, 0), pitchDelta);
             this.yawQuaternion.setFromAxisAngle(new THREE.Vector3(0, 1, 0), yawDelta);
 
-            // Apply quaternions to the camera
+            //Apply quaternions
             this.camera.quaternion.multiplyQuaternions(this.yawQuaternion, this.camera.quaternion);
             this.camera.quaternion.multiplyQuaternions(this.camera.quaternion, this.pitchQuaternion);
 
