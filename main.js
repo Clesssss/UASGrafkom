@@ -33,9 +33,6 @@ class FreeCamera {
         this.defaultFov = this.camera.fov;
         this.zoomSpeed = 2;
 
-        this.defaultFov = this.camera.fov;
-        this.zoomSpeed = 2;
-
         document.addEventListener("keydown", (e) => this.onKeyDown(e), false);
         document.addEventListener("keyup", (e) => this.onKeyUp(e), false);
         document.addEventListener("mousemove", (e) => this.onMouseMove(e), false);
