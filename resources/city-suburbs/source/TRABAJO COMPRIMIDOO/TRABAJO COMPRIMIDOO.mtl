@@ -1,0 +1,36 @@
+# Blender 4.1.1 MTL File: 'TRABAJO COMPRIMIDOO.blend'
+# www.blender.org
+
+newmtl ATLAS
+Ka 1.000000 1.000000 1.000000
+Ks 0.500000 0.500000 0.500000
+Ke 0.000000 0.000000 0.000000
+Ni 1.500000
+d 1.000000
+illum 2
+map_Kd ../../textures/ATLAS_COLOR.jpg
+map_Ns ../../textures/ROUGHNESS_ATLAS.jpg
+map_refl ../../textures/METALNESS_ATLAS.jpg
+map_Bump -bm 1.000000 ../../textures/NORMAL_ATLAS.jpg
+
+newmtl ATLAS_PROPS
+Ka 1.000000 1.000000 1.000000
+Ks 0.500000 0.500000 0.500000
+Ni 1.190000
+d 1.000000
+illum 2
+map_Kd ../../textures/PROPATLAS_diffuse.jpg
+map_Ns ../../textures/PROPATLAS_roughness.jpg
+map_refl ../../textures/PROPATLAS_metalness.jpg
+map_Ke ../../textures/PROPATLAS_emit.jpg
+map_Bump -bm 1.260000 ../../textures/PROPATLAS_normal.jpg
+
+newmtl cristal
+Ns 923.566406
+Ka 0.235433 0.235433 0.235433
+Kd 1.000000 1.000000 1.000000
+Ks 0.500000 0.500000 0.500000
+Ke 0.000000 0.000000 0.000000
+Ni 2.790000
+d 1.000000
+illum 3
