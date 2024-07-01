@@ -224,24 +224,30 @@ export class PlayerController{
         }
     }
 }
-export class ThirdPersonCamera{
-    constructor(camera, positionOffset, targetOffset){
+export class ThirdPersonCamera {
+    constructor(camera, positionOffset, targetOffset) {
         this.camera = camera;
         this.positionOffset = positionOffset;
         this.targetOffset = targetOffset;
     }
-    setup(target, angle){
-        var temp = new THREE.Vector3();
 
-        temp.copy(this.positionOffset);
-        temp.applyAxisAngle(new THREE.Vector3(0,1,0), angle.y);
-        temp.applyAxisAngle(new THREE.Vector3(0,0,1), angle.z);
-        //temp.addVectors(target, this.positionOffset);
-        temp.addVectors(target, temp);
-        this.camera.position.copy(temp);
+    setup(targetPosition, rotationVector) {
+        // Calculate the camera's position offset from the target's position
+        const offset = new THREE.Vector3();
+        offset.copy(this.positionOffset);
+        offset.applyAxisAngle(new THREE.Vector3(0, 1, 0), rotationVector.y);
 
-        temp = new THREE.Vector3();
-        temp.addVectors(target, this.targetOffset);
-        this.camera.lookAt(temp);
+        // Position the camera
+        const cameraPosition = new THREE.Vector3();
+        cameraPosition.addVectors(targetPosition, offset);
+        this.camera.position.copy(cameraPosition);
+
+        // Calculate the camera's target position
+        const target = new THREE.Vector3();
+        target.copy(targetPosition);
+        target.add(this.targetOffset);
+
+        // Make the camera look at the target
+        this.camera.lookAt(target);
     }
 }
