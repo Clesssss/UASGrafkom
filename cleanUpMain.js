@@ -188,9 +188,6 @@ class Main{
                             // let x=0, y=0, z=0;
                     
                             for (let i = 0; i < positions.count; i++) {
-                                // x = positions.getX(i);
-                                // y = positions.getY(i);
-                                // z = positions.getZ(i);
                                 xSum += positions.getX(i);
                                 ySum += positions.getY(i);
                                 zSum += positions.getZ(i);
@@ -205,13 +202,13 @@ class Main{
                             //Add a point light to the lamp's centroid position
                             const pointLight = new THREE.PointLight(0xffffff, 1, 100000);
                             const helperpl = new THREE.PointLightHelper(pointLight);
-                            // const directLight = new THREE.DirectionalLight(0xffffff);
+                            //const directLight = new THREE.DirectionalLight(0xffffff);
                             
                             
 
                             //const ambientLight1 = new THREE.AmbientLight(0xffffff,0.1);
                             pointLight.position.set(x-1, y-1, z+1);
-                            pointLight.castShadow = true;
+                            // pointLight.castShadow = true;
 
                             // directLight.position.set(x-1, y-1, z+1);
 
