@@ -16,6 +16,7 @@ export class Player{
         // this.mesh.receiveShadow = true;
         // this.mesh.castShadow = true;
         // this.scene.add(this.mesh);
+        // this.position = new THREE.Vector3(0,1.5,0);
         this.loadModel();
         
     }
@@ -25,16 +26,20 @@ export class Player{
         //loader.setPath("./resources/Knight");
         loader.setPath("./");
         loader.load('Sword And Shield Idle.fbx', (fbx)=> {
-            fbx.scale.setScalar(0.01);
+            // fbx.scale.setScalar(0.01);
             fbx.traverse(c=>{
                 c.castShadow = true;
             });
             this.mesh = fbx;
             this.scene.add(this.mesh); //jalan secara asynchronous 
+            
+            this.mesh.position.copy(new THREE.Vector3(0,0.5,0));
             //ga akan langsung sls dan update nya akn lgsg jalan dan akan ada suatu kondisi dimana mesh nya belum muncul
             this.boundingBox = new THREE.Box3().setFromObject(this.mesh);
             const helperww = new THREE.Box3Helper(this.boundingBox, 0xffff00);
             this.scene.add(helperww);
+            this.mesh.scale.setScalar(0.0095);
+
             this.mixer = new THREE.AnimationMixer(this.mesh);
             var onLoad = (animName, anim) => {
                 var clip = anim.animations[0];
