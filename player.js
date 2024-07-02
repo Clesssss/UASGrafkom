@@ -103,59 +103,49 @@ export class Player{
                 this.mixer.update(dt);
             } 
         }
-        var forwardVector = new THREE.Vector3(1,0,0);
-        var rightVector = new THREE.Vector3(0,0,1); //dirotate dulu terhadap y karena ketika maju dan kanan kiri kita au cari tahu y nya
-        forwardVector.applyAxisAngle(new THREE.Vector3(0,1,0), this.rotationVector.y);
-        rightVector.applyAxisAngle(new THREE.Vector3(0,1,0), this.rotationVector.y);
+        var forwardVector = new THREE.Vector3(1, 0, 0);
+        var rightVector = new THREE.Vector3(0, 0, 1);
+        forwardVector.applyAxisAngle(new THREE.Vector3(0, 1, 0), this.rotationVector.y);
+        rightVector.applyAxisAngle(new THREE.Vector3(0, 1, 0), this.rotationVector.y);
 
-        
         var newPosition = this.mesh.position.clone();
-        newPosition.add(forwardVector.multiplyScalar(dt * 10 * direction.x));
-        newPosition.add(rightVector.multiplyScalar(dt * 10 * direction.z));
 
-        var newBounding = new THREE.Box3().setFromObject(this.mesh);
-        newBounding.translate(forwardVector.multiplyScalar(dt * 10 * direction.x));
-        newBounding.translate(rightVector.multiplyScalar(dt * 10 * direction.z));
+        if (direction.x !== 0) {
+            var forwardMovement = forwardVector.clone().multiplyScalar(dt * 10 * direction.x);
+            if (!this.checkCollision(newPosition.clone().add(forwardMovement))) { //cek collision
+                newPosition.add(forwardMovement);
+            }
+        }
+
+        if (direction.z !== 0) {
+            var rightMovement = rightVector.clone().multiplyScalar(dt * 10 * direction.z);
+            if (!this.checkCollision(newPosition.clone().add(rightMovement))) { //cek collision
+                newPosition.add(rightMovement);
+            }
+        }
+
+        this.mesh.position.copy(newPosition);
+        this.mixer.update(dt);
+        this.camera.setup(this.mesh.position, this.rotationVector);
+    }
+    //memeriksa collision nya baik arah x atau z (forward sm right)
+    checkCollision(position) {
+        var boundingBox = new THREE.Box3().setFromObject(this.mesh);
+        boundingBox.translate(position.clone().sub(this.mesh.position)); //posisi e dicopas terus di kurangi
 
         var collisionDetected = false;
         this.scene.traverse(function (child) {
             if (child.isMesh && child.boundingBox) {
-                if (child.name != "Kachujin" && !child.name.includes("CARRETERAS")){
+                if (child.name !== "Kachujin" && !child.name.includes("CARRETERAS")) { //soale kenek kachujin terus ambe carretas
                     var box = new THREE.Box3().setFromObject(child);
-                    if (box.intersectsBox(newBounding)) {
-                        console.log('Collision detected with', child.name);
+                    if (box.intersectsBox(boundingBox)) {
                         collisionDetected = true;
                     }
-                } else {
-                    
                 }
-                
             }
-        }.bind(this));
-
-        if (!collisionDetected) {
-            this.mesh.position.add(forwardVector.multiplyScalar(dt * 10 * direction.x));
-            this.mesh.position.add(rightVector.multiplyScalar(dt * 10 * direction.z));
-        } else {
-            
-        }
-
-
-        
-
-        // Check for collision before actually moving the player
-        this.boundingBox.setFromObject(this.mesh); // Update bounding box position
-
-        const helperww = new THREE.Box3Helper(this.boundingBox, 0x00ffff);
-        this.scene.add(helperww);
-
-        
-        
-
-        this.camera.setup(this.mesh.position, this.rotationVector);
+        });
+        return collisionDetected;
     }
-    
-
 }
 export class PlayerController{
     constructor(){
