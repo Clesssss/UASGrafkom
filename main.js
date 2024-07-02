@@ -1,9 +1,8 @@
 import * as THREE from "three";
-import {OrbitControls} from "three/addons/controls/OrbitControls.js";
 import { MTLLoader } from 'three/addons/loaders/MTLLoader.js';
 import { OBJLoader } from 'three/addons/loaders/OBJLoader.js';
 import  {PlayerController, ThirdPersonCamera, Player} from "./player.js";
-
+import { Enemy } from "./enemy.js";
 class FreeCamera {
     constructor(camera) {
         this.camera = camera;
@@ -182,8 +181,8 @@ class Main{
                         }
                     } );
                     object.traverse(function (child) {
-                        if (child.isMesh && child.name.includes('Farola')) {
-                            console.log('Lamp Found:', child.name);
+                        if (child.isMesh && (child.name.includes('Farola'))) {
+                            // console.log('Lamp Found:', child.name);
                     
                             const positions = child.geometry.attributes.position;
                             let xSum = 0, ySum = 0, zSum = 0;
@@ -199,21 +198,40 @@ class Main{
                             console.log(`Lamp Centroid: (${x}, ${y}, ${z})`);
                     
                             //Add a point light to the lamp's centroid position
-                            const pointLight = new THREE.PointLight(0xffffff, 1, 100000);
-                            //const helperpl = new THREE.PointLightHelper(pointLight);
+                            const pointLight = new THREE.PointLight(0xffffff, 1);
+                            
                             //const directLight = new THREE.DirectionalLight(0xffffff);
                             
                             
 
                             //const ambientLight1 = new THREE.AmbientLight(0xffffff,0.1);
-                            pointLight.position.set(x-1, y-1, z+1);
-                            // pointLight.castShadow = true;
+                            if (child.name.includes('Farola.')) {
+                                pointLight.position.set(x, y - 0.3, z);
+                                // pointLight.castShadow = true;
+                            } else {
+                                if (child.name.includes('Farola_2.009') || child.name.includes('Farola_2.010') || 
+                                child.name.includes('Farola_2.011') || child.name.includes('Farola_2.012') || 
+                                child.name.includes('Farola_2.013') || child.name.includes('Farola_2.014') || 
+                                child.name.includes('Farola_2.015')){
+                                    pointLight.position.set(x, y + 0.5, z);
+                                    console.log('Lamp Found:', child.name);
+                                    pointLight.castShadow = true;
+                                } else {
+                                    pointLight.position.set(x, y, z);
+                                }
+                                
+                            }
+                            const helperpl = new THREE.PointLightHelper(pointLight);
+                           
+
+                            
+                            
 
                             // directLight.position.set(x-1, y-1, z+1);
 
                             
                             Main.scene.add(pointLight);
-                            //Main.scene.add(helperpl);
+                            Main.scene.add(helperpl);
                             //Main.scene.add(ambientLight1);
                     
                             // Log the light position
@@ -253,6 +271,7 @@ class Main{
             controller,
             this.scene
         );
+        this.enemy = new Enemy(this.scene);
     }
     
     static onKeyDown(event) {
@@ -268,7 +287,7 @@ class Main{
         } else {
             this.player.update(dt);
         }
-
+        this.enemy.update(dt);
         this.renderer.render(this.scene, this.camera);
         this.scene.traverse(function (child) {
             if (child.isMesh && child.boundingBox) {

@@ -32,9 +32,10 @@ export class Player{
             });
             this.mesh = fbx;
             this.scene.add(this.mesh); //jalan secara asynchronous 
-            
-            this.mesh.position.copy(new THREE.Vector3(0,0.5,0));
-            //ga akan langsung sls dan update nya akn lgsg jalan dan akan ada suatu kondisi dimana mesh nya belum muncul
+            // this.mesh.position.copy(new THREE.Vector3(0,0.5,0)); //on land
+            this.mesh.position.copy(new THREE.Vector3(-10,20.68,-20)); // top of building
+            this.mesh.rotation.y = Math.PI; 
+
             this.boundingBox = new THREE.Box3().setFromObject(this.mesh);
             const helperww = new THREE.Box3Helper(this.boundingBox, 0xffff00);
             this.scene.add(helperww);
@@ -57,9 +58,6 @@ export class Player{
             loader.load('Sword And Shield Run.fbx', (fbx)=>{onLoad('run', fbx);});
 
         });
-    }
-    checkCollisions(newPosition) {
-
     }
     update (dt){
         if(!this.mesh){return} //karena catatan diatas
@@ -136,9 +134,10 @@ export class Player{
         var collisionDetected = false;
         this.scene.traverse(function (child) {
             if (child.isMesh && child.boundingBox) {
-                if (child.name !== "Kachujin" && !child.name.includes("CARRETERAS")) { //soale kenek kachujin terus ambe carretas
+                if (child.name !== "Kachujin" && !child.name.includes("CARRETERAS") && child.name !== "parasiteZombie") { //soale kenek kachujin terus ambe carretas
                     var box = new THREE.Box3().setFromObject(child);
                     if (box.intersectsBox(boundingBox)) {
+                        console.log(child.name);
                         collisionDetected = true;
                     }
                 }
