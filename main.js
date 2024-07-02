@@ -177,8 +177,8 @@ class Main{
                             child.geometry.computeBoundingBox();
                             child.boundingBox = child.geometry.boundingBox.clone();
 
-                            const helper = new THREE.Box3Helper(child.boundingBox, 0xffff00);
-                            Main.scene.add(helper);
+                            // const helper = new THREE.Box3Helper(child.boundingBox, 0xffff00);
+                            // Main.scene.add(helper);
                         }
                     } );
                     object.traverse(function (child) {
@@ -200,7 +200,7 @@ class Main{
                     
                             //Add a point light to the lamp's centroid position
                             const pointLight = new THREE.PointLight(0xffffff, 1, 100000);
-                            const helperpl = new THREE.PointLightHelper(pointLight);
+                            //const helperpl = new THREE.PointLightHelper(pointLight);
                             //const directLight = new THREE.DirectionalLight(0xffffff);
                             
                             
@@ -213,7 +213,7 @@ class Main{
 
                             
                             Main.scene.add(pointLight);
-                            Main.scene.add(helperpl);
+                            //Main.scene.add(helperpl);
                             //Main.scene.add(ambientLight1);
                     
                             // Log the light position
