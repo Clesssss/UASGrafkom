@@ -195,8 +195,6 @@ class Main{
                             const y = ySum / positions.count;
                             const z = zSum / positions.count;
                     
-                            console.log(`Lamp Centroid: (${x}, ${y}, ${z})`);
-                    
                             const pointLight = new THREE.PointLight(0xffffff, 1);
                             
                             //const directLight = new THREE.DirectionalLight(0xffffff);
