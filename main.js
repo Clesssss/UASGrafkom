@@ -197,7 +197,6 @@ class Main{
                     
                             console.log(`Lamp Centroid: (${x}, ${y}, ${z})`);
                     
-                            //Add a point light to the lamp's centroid position
                             const pointLight = new THREE.PointLight(0xffffff, 1);
                             
                             //const directLight = new THREE.DirectionalLight(0xffffff);
@@ -221,7 +220,7 @@ class Main{
                                 }
                                 
                             }
-                            const helperpl = new THREE.PointLightHelper(pointLight);
+                            
                            
 
                             
@@ -231,11 +230,8 @@ class Main{
 
                             
                             Main.scene.add(pointLight);
-                            Main.scene.add(helperpl);
                             //Main.scene.add(ambientLight1);
                     
-                            // Log the light position
-                            console.log('Light Position:', pointLight.position);
                         }
                     });
                 });
