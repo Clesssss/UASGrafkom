@@ -157,18 +157,6 @@ class Main{
         world.castShadow = true;
         this.scene.add(world);
 
-        // Add the glass object to the scene
-        const glassMaterial = new THREE.MeshPhongMaterial({
-            color: 0x888888,
-            transparent: true,
-            opacity: 0.7,   
-            shininess: 100,
-        });
-        const glassGeometry = new THREE.SphereGeometry(2.5, 32, 32);  // Using SphereGeometry instead of BoxGeometry
-        const glassMesh = new THREE.Mesh(glassGeometry, glassMaterial);
-        glassMesh.position.set(-24.8, 3, 14.547677210635609);
-        this.scene.add(glassMesh);
-
         //World
         new MTLLoader()
         .setPath( './resources/city-suburbs/source/TRABAJO COMPRIMIDOO/' )
@@ -223,9 +211,9 @@ class Main{
                                 child.name.includes('Farola_2.013') || child.name.includes('Farola_2.014') || 
                                 child.name.includes('Farola_2.015')){
                                     pointLight.position.set(x, y + 0.5, z);
-                                    console.log('Lamp Found:', child.name);
-                                    console.log(x + " " + y + " " + z);
-                                    pointLight.castShadow = true;
+                                    // console.log('Lamp Found:', child.name);
+                                    // console.log(x + " " + y + " " + z);
+                                    // pointLight.castShadow = true;
                                 } else {
                                     pointLight.position.set(x, y, z);
                                 }
@@ -286,7 +274,20 @@ class Main{
             controller,
             this.scene
         );
-        this.enemy = new Enemy(this.scene);
+
+        // Add the glass object to the scene
+        const barrierMaterial = new THREE.MeshPhongMaterial({
+            color: 0x888888,
+            transparent: true,
+            opacity: 0.7,
+            shininess: 100,
+        });
+        const barrierGeometry = new THREE.SphereGeometry(2.5, 32, 32);  // Using SphereGeometry instead of BoxGeometry
+        const barrier = new THREE.Mesh(barrierGeometry, barrierMaterial);
+        
+        this.scene.add(barrier);
+
+        this.enemy = new Enemy(this.scene, barrier);
     }
     
     static onKeyDown(event) {

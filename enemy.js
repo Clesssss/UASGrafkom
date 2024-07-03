@@ -1,14 +1,17 @@
 import * as THREE from "three";
 import { FBXLoader } from "three/addons/loaders/FBXLoader.js";
 export class Enemy {
-    constructor(scene) {
+    constructor(scene, barrier) {
         this.scene = scene;
+        this.barrier = barrier;
         this.animations = {}; //dictionary
         this.state = 'idle';
         this.event = 'idle';
         this.loadModel();
         this.addKeyListeners();
-
+        this.barrier.position.copy(new THREE.Vector3(-20, 4.7, 25));
+        // barrier.position.set(-24.8, 3, 14.547677210635609);
+        // this.barrier.position.set();
     }
 
     loadModel() {

@@ -40,9 +40,8 @@ export class Player{
             });
             this.mesh = fbx;
             this.scene.add(this.mesh); //jalan secara asynchronous 
-            // this.mesh.position.copy(new THREE.Vector3(0,0.5,0)); //on land
+            // this.mesh.position.copy(new THREE.Vector3(-21.15880340752256, 0.5, 12.002239413322224)); //on land
             this.mesh.position.copy(new THREE.Vector3(-10,20.68,-20)); // top of building
-            this.mesh.rotation.y = Math.PI; 
 
             this.boundingBox = new THREE.Box3().setFromObject(this.mesh);
             // const helperww = new THREE.Box3Helper(this.boundingBox, 0xffff00);
@@ -128,7 +127,7 @@ export class Player{
             this.velocity.add(this.gravity.clone().multiplyScalar(dt)); //nek misal jump langsung dikenakan seuah gravitasi
             this.mesh.position.add(this.velocity.clone().multiplyScalar(dt));
 
-            if (this.checkCollision(this.mesh.position)) {
+            if (this.checkCollisionJump(this.mesh.position)) {
                 this.isJumping = false;
                 this.velocity.y = 0;
             }
@@ -162,6 +161,8 @@ export class Player{
         this.mesh.position.copy(newPosition);
         this.mixer.update(dt);
         this.camera.setup(this.mesh.position, this.rotationVector);
+        console.log(this.mesh.position);
+        console.log(this.mesh.rotation);
     }
     //memeriksa collision nya baik arah x atau z (forward sm right)
     checkCollision(position) {
@@ -172,6 +173,24 @@ export class Player{
         this.scene.traverse(function (child) {
             if (child.isMesh && child.boundingBox) {
                 if (child.name !== "Kachujin" && !child.name.includes("CARRETERAS") && child.name !== "parasiteZombie") { //soale kenek kachujin terus ambe carretas
+                    var box = new THREE.Box3().setFromObject(child);
+                    if (box.intersectsBox(boundingBox)) {
+                        console.log(child.name);
+                        collisionDetected = true;
+                    }
+                }
+            }
+        });
+        return collisionDetected;
+    }
+    checkCollisionJump(position){
+        var boundingBox = new THREE.Box3().setFromObject(this.mesh);
+        boundingBox.translate(position.clone().sub(this.mesh.position)); //posisi e dicopas terus di kurangi
+
+        var collisionDetected = false;
+        this.scene.traverse(function (child) {
+            if (child.isMesh && child.boundingBox) {
+                if (child.name !== "Kachujin" && child.name !== "parasiteZombie") { //soale kenek kachujin terus ambe carretas
                     var box = new THREE.Box3().setFromObject(child);
                     if (box.intersectsBox(boundingBox)) {
                         console.log(child.name);
