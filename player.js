@@ -17,6 +17,12 @@ export class Player{
         // this.mesh.castShadow = true;
         // this.scene.add(this.mesh);
         // this.position = new THREE.Vector3(0,1.5,0);
+
+        this.velocity = new THREE.Vector3();
+        this.isJumping = false; //lagi loncat atau tidak
+        this.jumpStrength = 10;// loncat e sak berapa
+        this.gravity = new THREE.Vector3(0, -9.8, 0); //vektor gerak ke bawah 
+
         this.loadModel();
         
     }
@@ -32,8 +38,8 @@ export class Player{
             });
             this.mesh = fbx;
             this.scene.add(this.mesh); //jalan secara asynchronous 
-            this.mesh.position.copy(new THREE.Vector3(0,0.5,0)); //on land
-            // this.mesh.position.copy(new THREE.Vector3(-10,20.68,-20)); // top of building
+            // this.mesh.position.copy(new THREE.Vector3(0,0.5,0)); //on land
+            this.mesh.position.copy(new THREE.Vector3(-10,20.68,-20)); // top of building
             this.mesh.rotation.y = Math.PI; 
 
             this.boundingBox = new THREE.Box3().setFromObject(this.mesh);
@@ -56,9 +62,11 @@ export class Player{
             loader.setPath("./resources/Player/");
             loader.load('Sword And Shield Idle.fbx', (fbx)=>{onLoad('idle', fbx);});
             loader.load('Sword And Shield Run.fbx', (fbx)=>{onLoad('run', fbx);});
+            loader.load('Jumping Up.fbx',(fbx)=>{onLoad('jump',fbx);});
 
         });
     }
+    
     update (dt){
         if(!this.mesh){return} //karena catatan diatas
         var direction = new THREE.Vector3(0,0,0);
@@ -73,6 +81,10 @@ export class Player{
         }
         if(this.controller.keys['right']){
             direction.z = 1;
+        }
+        if (this.controller.keys['upward'] && !this.isJumping) {
+            this.isJumping = true; //lagi loncat kan makae true
+            this.velocity.y = this.jumpStrength; //kecepatan loncat e 10
         }
 
         var dtMouse = this.controller.deltaMousePos;
@@ -91,7 +103,16 @@ export class Player{
                 this.mixer.clipAction(this.animations['idle'].clip).play();
                 this.mixer.update(dt);
             }
-        }else{
+        }else if (this.isJumping) {
+            if (this.state !== 'jump' && this.animations['jump']) {
+                this.mixer.stopAllAction();
+                this.animations['jump'].action.play();
+                this.state = 'jump';
+                this.mixer.clipAction(this.animations['jump'].clip).play();
+                this.mixer.update(dt);
+            }
+        }
+        else{
             if(this.animations['run']){
                 if(this.state != 'run'){
                     this.mixer.stopAllAction();
@@ -100,6 +121,17 @@ export class Player{
                 this.mixer.clipAction(this.animations['run'].clip).play();
                 this.mixer.update(dt);
             } 
+        }
+
+
+        if (this.isJumping) {
+            this.velocity.add(this.gravity.clone().multiplyScalar(dt)); //nek misal jump langsung dikenakan seuah gravitasi
+            this.mesh.position.add(this.velocity.clone().multiplyScalar(dt));
+
+            if (this.checkCollision(this.mesh.position)) {
+                this.isJumping = false;
+                this.velocity.y = 0;
+            }
         }
         var forwardVector = new THREE.Vector3(1, 0, 0);
         var rightVector = new THREE.Vector3(0, 0, 1);
@@ -153,6 +185,8 @@ export class PlayerController{
             "backward" : false,
             "left" : false,
             "right" : false,
+            "upward": false,
+            "downward": false,
         };
         this.mousePos = new THREE.Vector2();
         this.mouseDown = false;
@@ -213,6 +247,8 @@ export class PlayerController{
                 case 'a': this.keys["left"] = true; break;
             case 'D':
                 case 'd': this.keys["right"] = true; break;
+            case 'ArrowUp': this.keys["upward"] = true; break;
+            case 'ArrowDown': this.keys["downward"] = true; break;
 
         }
     }
