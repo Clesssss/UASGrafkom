@@ -247,7 +247,11 @@ export class ThirdPersonCamera {
         // Position the camera
         const cameraPosition = new THREE.Vector3();
         cameraPosition.addVectors(targetPosition, offset);
-        this.camera.position.copy(cameraPosition);
+
+        // Check for collisions and adjust camera position
+        const collisionFreePosition = this.adjustForCollisions(targetPosition, cameraPosition);
+
+        this.camera.position.copy(collisionFreePosition);
 
         // Calculate the camera's target position
         const target = new THREE.Vector3();
@@ -257,4 +261,21 @@ export class ThirdPersonCamera {
         // Make the camera look at the target
         this.camera.lookAt(target);
     }
+
+    adjustForCollisions(targetPosition, desiredCameraPosition) {
+        const direction = new THREE.Vector3().subVectors(desiredCameraPosition, targetPosition).normalize();
+        const raycaster = new THREE.Raycaster(targetPosition, direction);
+        const intersections = raycaster.intersectObjects(this.cameraCollisionObjects, true);
+
+        if (intersections.length > 0 && intersections[0].distance < this.positionOffset.length()) {
+            return intersections[0].point.addScaledVector(direction, -0.1); // Move the camera slightly back from the collision point
+        }
+
+        return desiredCameraPosition;
+    }
+
+    setCollisionObjects(objects) {
+        this.cameraCollisionObjects = objects;
+    }
 }
+
