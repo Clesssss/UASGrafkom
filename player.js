@@ -8,6 +8,7 @@ export class Player{
         this.rotationVector = new THREE.Vector3();
         this.animations = {}; //dictionary
         this.state = 'idle';
+        this.boxing = false;
         this.camera.setup(new THREE.Vector3(0,0,0), this.rotationVector);
         // this.mesh = new THREE.Mesh(
         //     new THREE.BoxGeometry(1,1,1),
@@ -35,6 +36,7 @@ export class Player{
             // fbx.scale.setScalar(0.01);
             fbx.traverse(c=>{
                 c.castShadow = true;
+                c.receiveShadow = true;
             });
             this.mesh = fbx;
             this.scene.add(this.mesh); //jalan secara asynchronous 
@@ -43,8 +45,8 @@ export class Player{
             this.mesh.rotation.y = Math.PI; 
 
             this.boundingBox = new THREE.Box3().setFromObject(this.mesh);
-            const helperww = new THREE.Box3Helper(this.boundingBox, 0xffff00);
-            this.scene.add(helperww);
+            // const helperww = new THREE.Box3Helper(this.boundingBox, 0xffff00);
+            // this.scene.add(helperww);
             this.mesh.scale.setScalar(0.0095);
 
             this.mixer = new THREE.AnimationMixer(this.mesh);
@@ -63,10 +65,10 @@ export class Player{
             loader.load('Sword And Shield Idle.fbx', (fbx)=>{onLoad('idle', fbx);});
             loader.load('Sword And Shield Run.fbx', (fbx)=>{onLoad('run', fbx);});
             loader.load('Jumping Up.fbx',(fbx)=>{onLoad('jump',fbx);});
+            loader.load('Boxing.fbx', (fbx)=>{onLoad('boxing', fbx);});
 
         });
     }
-    
     update (dt){
         if(!this.mesh){return} //karena catatan diatas
         var direction = new THREE.Vector3(0,0,0);
@@ -122,8 +124,6 @@ export class Player{
                 this.mixer.update(dt);
             } 
         }
-
-
         if (this.isJumping) {
             this.velocity.add(this.gravity.clone().multiplyScalar(dt)); //nek misal jump langsung dikenakan seuah gravitasi
             this.mesh.position.add(this.velocity.clone().multiplyScalar(dt));
@@ -132,6 +132,11 @@ export class Player{
                 this.isJumping = false;
                 this.velocity.y = 0;
             }
+        }
+        if (this.controller.keys['boxing']) {
+            this.boxing = true;
+        } else {
+            this.boxing = false;
         }
         var forwardVector = new THREE.Vector3(1, 0, 0);
         var rightVector = new THREE.Vector3(0, 0, 1);
@@ -249,7 +254,8 @@ export class PlayerController{
                 case 'd': this.keys["right"] = true; break;
             case 'ArrowUp': this.keys["upward"] = true; break;
             case 'ArrowDown': this.keys["downward"] = true; break;
-
+            case 'K':
+                case 'k': this.keys["boxing"] = true; break;
         }
     }
     onKeyUp(event){
@@ -259,12 +265,14 @@ export class PlayerController{
                 case 'w': this.keys["forward"] = false; break;
             case 'S':
                 case 's': this.keys["backward"] = false; break;
-            case 'A':   
+            case 'A':
                 case 'a': this.keys["left"] = false; break;
             case 'D':
                 case 'd': this.keys["right"] = false; break;
             case 'ArrowUp': this.keys["upward"] = false; break;
             case 'ArrowDown': this.keys["downward"] = false; break;
+            case 'K':
+                case 'k': this.keys["boxing"] = false; break;
 
         }
     }
@@ -316,4 +324,3 @@ export class ThirdPersonCamera {
         this.cameraCollisionObjects = objects;
     }
 }
-
