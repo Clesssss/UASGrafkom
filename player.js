@@ -259,10 +259,12 @@ export class PlayerController{
                 case 'w': this.keys["forward"] = false; break;
             case 'S':
                 case 's': this.keys["backward"] = false; break;
-            case 'A':
+            case 'A':   
                 case 'a': this.keys["left"] = false; break;
             case 'D':
                 case 'd': this.keys["right"] = false; break;
+            case 'ArrowUp': this.keys["upward"] = false; break;
+            case 'ArrowDown': this.keys["downward"] = false; break;
 
         }
     }
