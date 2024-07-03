@@ -255,6 +255,14 @@ class Main{
             new THREE.Vector3(-5, 2, 0),
             new THREE.Vector3(0, 0, 0)
         );
+        
+        const collisionObjects = [];
+        this.scene.traverse(function (child) {
+            if (child.isMesh) {
+                collisionObjects.push(child);
+            }
+        });
+        this.thirdPersonCamera.setCollisionObjects(collisionObjects);
 
         document.addEventListener("keydown", (e) => this.onKeyDown(e), false);
 
