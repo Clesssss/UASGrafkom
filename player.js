@@ -32,8 +32,8 @@ export class Player{
             });
             this.mesh = fbx;
             this.scene.add(this.mesh); //jalan secara asynchronous 
-            // this.mesh.position.copy(new THREE.Vector3(0,0.5,0)); //on land
-            this.mesh.position.copy(new THREE.Vector3(-10,20.68,-20)); // top of building
+            this.mesh.position.copy(new THREE.Vector3(0,0.5,0)); //on land
+            // this.mesh.position.copy(new THREE.Vector3(-10,20.68,-20)); // top of building
             this.mesh.rotation.y = Math.PI; 
 
             this.boundingBox = new THREE.Box3().setFromObject(this.mesh);

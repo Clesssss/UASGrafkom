@@ -35,8 +35,8 @@ class FreeCamera {
         document.addEventListener("keydown", (e) => this.onKeyDown(e), false);
         document.addEventListener("keyup", (e) => this.onKeyUp(e), false);
         document.addEventListener("mousemove", (e) => this.onMouseMove(e), false);
-        document.addEventListener("mousedown", (e) => this.onMouseDown(e), false);
-        document.addEventListener("mouseup", (e) => this.onMouseUp(e), false);
+        // document.addEventListener("mousedown", (e) => this.onMouseDown(e), false);
+        // document.addEventListener("mouseup", (e) => this.onMouseUp(e), false);
         document.addEventListener('pointerlockchange', this.onPointerLockChange.bind(this), false);
         document.addEventListener('pointerlockerror', this.onPointerLockError.bind(this), false);
         document.addEventListener('wheel', (e) => this.onMouseWheel(e), false);
@@ -70,14 +70,14 @@ class FreeCamera {
 
     onPointerLockChange() {
         if (document.pointerLockElement === document.body) {
-            console.log('Pointer locked');
+            // console.log('Pointer locked');
         } else {
-            console.log('Pointer unlocked');
+            // console.log('Pointer unlocked');
         }
     }
 
     onPointerLockError() {
-        console.error('Pointer lock error');
+        // console.error('Pointer lock error');
     }
 
     onMouseWheel(event) {
@@ -106,7 +106,7 @@ class FreeCamera {
             this.camera.quaternion.multiplyQuaternions(this.yawQuaternion, this.camera.quaternion);
             this.camera.quaternion.multiplyQuaternions(this.camera.quaternion, this.pitchQuaternion);
 
-            console.log(this.pitch);
+            // console.log(this.pitch);
         }
     }
 
@@ -156,6 +156,18 @@ class Main{
         world.receiveShadow = true;
         world.castShadow = true;
         this.scene.add(world);
+
+        // Add the glass object to the scene
+        const glassMaterial = new THREE.MeshPhongMaterial({
+            color: 0x888888,
+            transparent: true,
+            opacity: 0.7,   
+            shininess: 100,
+        });
+        const glassGeometry = new THREE.SphereGeometry(2.5, 32, 32);  // Using SphereGeometry instead of BoxGeometry
+        const glassMesh = new THREE.Mesh(glassGeometry, glassMaterial);
+        glassMesh.position.set(-24.8, 3, 14.547677210635609);
+        this.scene.add(glassMesh);
 
         //World
         new MTLLoader()
@@ -212,6 +224,7 @@ class Main{
                                 child.name.includes('Farola_2.015')){
                                     pointLight.position.set(x, y + 0.5, z);
                                     console.log('Lamp Found:', child.name);
+                                    console.log(x + " " + y + " " + z);
                                     pointLight.castShadow = true;
                                 } else {
                                     pointLight.position.set(x, y, z);
@@ -277,7 +290,7 @@ class Main{
     }
     
     static onKeyDown(event) {
-        if (event.key === 'e') {
+        if (event.key == 'e') {
             this.isFreeCamera = !this.isFreeCamera;
             this.freeCamera.pitch = 0;
         }
